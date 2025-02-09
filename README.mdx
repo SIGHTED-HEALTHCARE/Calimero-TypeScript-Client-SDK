@@ -1,46 +1,75 @@
-[![SDK publish gh action](https://github.com/calimero-network/calimero-client-js/actions/workflows/calimero_sdk_publish.yml/badge.svg)](https://github.com/calimero-network/core/actions/workflows/calimero_sdk_publish.yml)
-[![npm version](https://badge.fury.io/js/@calimero-network%2Fcalimero-client.svg)](https://badge.fury.io/js/@calimero-network%2Fcalimero-client)
+# SIGHTED: Secure Information Guarding Healthcare Through Encrypted Data
 
-<div align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://assets-global.website-files.com/6256e0ccf395021e66e913b6/65cb5711287e06754d171147_calimero_logo_white.svg">
-    <img alt="Daytona logo" style="" src="https://assets-global.website-files.com/6256e0ccf395021e66e913b6/65cb5711287e06754d171147_calimero_logo_white.svg" width="40%">
-  </picture>
-</div>
+**SIGHTED** is a privacy-preserving healthcare platform built on **Calimero Network** and **Internet Computer Protocol (ICP)**. It leverages **Zero-Knowledge Proofs (ZKPs)** and **Calimero private shards** for secure data sharing, ensuring patients control their medical records while maintaining data privacy.
 
-### TypeScript Client SDK Overview
+## Features
+- **Privacy-Preserving Access Control**: Role-based permissions for secure data sharing.
+- **Zero-Knowledge Proofs (ZKPs)**: Verify data without revealing sensitive details.
+- **Real-Time Data Updates**: Stay informed with WebSocket-based event notifications.
+- **Token-Based Access Control**: Use your **ICP token** for managing access.
 
-The **Calimero TypeScript Client SDK** helps developers interact with decentralized apps by handling server communication. It simplifies the process, letting you focus on building your app while the SDK manages the technical details. Built with TypeScript, it ensures a smoother development experience with reliable tools.
+---
 
-The SDK has two main parts: `RpcClient` for sending queries and updates to the server, and `SubscriptionsClient` for subscribing to real-time updates. Both are designed to be easy to use and flexible, making it simple to adapt to future updates.
+## Installation
 
-### Quick Examples
+Install the Calimero TypeScript Client SDK:
+```bash
+npm install @calimero-network/calimero-client
+```
 
-1. **Using `JsonRpcClient`**:
+---
 
-   ```typescript
-   const rpcClient = new JsonRpcClient(
-     process.env['NEXT_PUBLIC_API_URL'],
-     '/jsonrpc',
-   );
-   const params = {
-     applicationId: process.env['NEXT_PUBLIC_APPLICATION_ID'],
-     method: 'create_post',
-     argsJson: { title: 'My First Post', text: 'This is my first post' },
-   };
-   const response = await rpcClient.mutate(params);
-   console.log(response);
-   ```
+## Configuration
 
-2. **Using `WsSubscriptionsClient`**:
-   ```typescript
-   const subscriptionsClient = new WsSubscriptionsClient(
-     process.env['NEXT_PUBLIC_API_URL'],
-     '/ws',
-   );
-   await subscriptionsClient.connect();
-   subscriptionsClient.subscribe([process.env['NEXT_PUBLIC_APPLICATION_ID']]);
-   subscriptionsClient.addCallback((data) => console.log(data));
-   ```
+Create a `.env` file with the following variables:
+```
+NEXT_PUBLIC_API_URL=https://your-calimero-node-url
+NEXT_PUBLIC_APPLICATION_ID=your-application-id
+```
 
-The SDK keeps things simple, letting you build decentralized apps efficiently without worrying about server details.
+---
+
+## Quick Start
+
+### Using RpcClient
+```typescript
+import { JsonRpcClient } from '@calimero-network/calimero-client';
+
+const rpcClient = new JsonRpcClient(process.env['NEXT_PUBLIC_API_URL'], '/jsonrpc');
+
+const response = await rpcClient.execute({
+  applicationId: process.env['NEXT_PUBLIC_APPLICATION_ID'],
+  method: 'grant_access',
+  argsJson: { userId: 'patient123', permissions: ['READ_MEDICAL_RECORD'] },
+});
+console.log('Access granted:', response);
+```
+
+### Using SubscriptionsClient for Real-Time Updates
+```typescript
+import { WsSubscriptionsClient } from '@calimero-network/calimero-client';
+
+const wsClient = new WsSubscriptionsClient(process.env['NEXT_PUBLIC_API_URL'], '/ws');
+
+await wsClient.connect();
+wsClient.subscribe([process.env['NEXT_PUBLIC_APPLICATION_ID']]);
+wsClient.addCallback((event) => {
+  console.log('Event received:', event);
+});
+```
+
+---
+
+## Available Scripts
+
+### Start Development Server
+```bash
+npm start
+```
+
+### Build for Production
+```bash
+npm run build
+```
+
+---
